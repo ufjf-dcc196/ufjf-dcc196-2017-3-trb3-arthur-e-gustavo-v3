@@ -16,7 +16,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_tags"
-        android:icon="@drawable/ic_label_white_24dp"
-        android:title="@string/action_tags"
+        android:icon="@drawable/ic_assignment_white_24dp"
+        android:title="@string/action_tasks"
         app:showAsAction="ifRoom" />
 </menu>

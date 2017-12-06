@@ -16,11 +16,11 @@ public class AppContract {
     }
 
     public static final class Task implements BaseColumns {
-        private static final String TABLE_NAME = "task";
-        private static final String COLUMN_NAME_TITLE = "title";
-        private static final String COLUMN_NAME_DESCRIPTION = "description";
-        private static final String COLUMN_NAME_DIFFICULTY = "difficulty";
-        private static final String COLUMN_NAME_STATE = "state";
+        public static final String TABLE_NAME = "task";
+        public static final String COLUMN_NAME_TITLE = "title";
+        public static final String COLUMN_NAME_DESCRIPTION = "description";
+        public static final String COLUMN_NAME_DIFFICULTY = "difficulty";
+        public static final String COLUMN_NAME_STATE = "state";
 
         public static final String SQL_CREATE_TASK = "CREATE TABLE " + TABLE_NAME + " (" +
                 _ID + INT_TYPE + " PRIMARY KEY AUTOINCREMENT" + SEP +
@@ -53,8 +53,8 @@ public class AppContract {
     }
 
     public static final class Tag implements BaseColumns {
-        private static final String TABLE_NAME = "tag";
-        private static final String COLUMN_NAME_NAME = "name";
+        public static final String TABLE_NAME = "tag";
+        public static final String COLUMN_NAME_NAME = "name";
 
         public static final String SQL_CREATE_TAG = "CREATE TABLE " + TABLE_NAME + " (" +
                 _ID + INT_TYPE + " PRIMARY KEY AUTOINCREMENT" + SEP +
@@ -76,9 +76,9 @@ public class AppContract {
     }
 
     public static final class TaskTag implements BaseColumns {
-        private static final String TABLE_NAME = "tasktag";
-        private static final String COLUMN_NAME_TASK = "task";
-        private static final String COLUMN_NAME_TAG = "tag";
+        public static final String TABLE_NAME = "tasktag";
+        public static final String COLUMN_NAME_TASK = "task";
+        public static final String COLUMN_NAME_TAG = "tag";
 
         public static final String SQL_CREATE_TASKTAG = "CREATE TABLE " + TABLE_NAME + " (" +
                 COLUMN_NAME_TASK + INT_TYPE + " NOT NULL REFERENCES " + Task.TABLE_NAME + "(" + Task._ID + ")" + SEP +
