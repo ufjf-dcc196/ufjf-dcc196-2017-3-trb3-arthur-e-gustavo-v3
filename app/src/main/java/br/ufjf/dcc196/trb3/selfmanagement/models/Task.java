@@ -8,17 +8,23 @@ import java.util.List;
 
 public class Task {
 
-    private Integer id;
+    private long id;
     private String title;
     private String description;
     private Integer difficulty;
     private TaskState state;
     private List<Tag> tags;
 
-    private enum TaskState {
-        DOING(3), TODO(2), WAIT(1), DONE(0);
+    public enum TaskState {
+        DOING(3, "Em execução"), TODO(2, "A fazer"), WAIT(1, "Bloqueada"), DONE(0, "Concluída");
 
         private final int priority;
+        private String displayName;
+
+        TaskState(int priority, String displayName) {
+            this.priority = priority;
+            this.displayName = displayName;
+        }
 
         TaskState(int priority) {
             this.priority = priority;
@@ -31,13 +37,17 @@ public class Task {
         boolean hasHigherPriorityThan(TaskState other) {
             return this.priority > other.getPriority();
         }
+
+        @Override
+        public String toString() {
+            return displayName;
+        }
     }
 
     public Task() {
     }
 
-    public Task(Integer id, String title, String description, Integer difficulty, TaskState state, List<Tag> tags) {
-        this.id = id;
+    public Task(String title, String description, Integer difficulty, TaskState state, List<Tag> tags) {
         this.title = title;
         this.description = description;
         this.difficulty = difficulty;
@@ -45,11 +55,11 @@ public class Task {
         this.tags = tags;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 

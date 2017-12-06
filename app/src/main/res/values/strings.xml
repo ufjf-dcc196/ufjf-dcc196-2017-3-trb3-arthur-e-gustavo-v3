@@ -10,4 +10,14 @@
     <string name="action_tasks">Tarefas</string>
     <string name="action_edit">Editar</string>
     <string name="action_remove">Remover</string>
+    <string name="txt_task_title">Título</string>
+    <string name="txt_task_description">Descrição</string>
+    <string name="txt_task_difficulty">Dificuldade</string>
+    <string name="txt_task_state">Estado</string>
+    <string name="txt_task_tags">Etiquetas</string>
+    <string name="ask_fill">Por favor, preencha todos os campos.</string>
+    <string name="state_doing">Em execução</string>
+    <string name="state_todo">A fazer</string>
+    <string name="state_done">Concluída</string>
+    <string name="state_wait">Bloqueada</string>
 </resources>

@@ -14,8 +14,11 @@ import br.ufjf.dcc196.trb3.selfmanagement.models.Tag;
 
 public class TagHelper extends DatabaseHelper {
 
+    private Context context;
+
     public TagHelper(Context context) {
         super(context);
+        this.context = context;
     }
 
     public Cursor getAll() {
@@ -28,8 +31,8 @@ public class TagHelper extends DatabaseHelper {
             String sort = AppContract.Tag.COLUMN_NAME_NAME + " ASC";
             return db.query(AppContract.Tag.TABLE_NAME, vision, null, null, null, null, sort);
         } catch (Exception e) {
-            Log.e("BOOK", e.getLocalizedMessage());
-            Log.e("BOOK", e.getStackTrace().toString());
+            Log.e("TAG", e.getLocalizedMessage());
+            Log.e("TAG", e.getStackTrace().toString());
             return null;
         }
     }
@@ -53,9 +56,12 @@ public class TagHelper extends DatabaseHelper {
         try {
             SQLiteDatabase db = getWritableDatabase();
             ContentValues values = new ContentValues();
+
             values.put(AppContract.Tag.COLUMN_NAME_NAME, tag.getName());
+
             String where = AppContract.Tag._ID + " = ?";
             String[] args = {String.valueOf(tag.getId())};
+
             db.update(AppContract.Tag.TABLE_NAME, values, where, args);
         } catch (Exception e) {
             Log.e("TAG", e.getLocalizedMessage());
@@ -65,9 +71,13 @@ public class TagHelper extends DatabaseHelper {
 
     public void remove(Tag tag) {
         try {
+            (new TaskTagHelper(context)).removeAllTasks(tag);
+
             SQLiteDatabase db = getWritableDatabase();
+
             String where = AppContract.Tag._ID + " = ?";
             String[] args = {String.valueOf(tag.getId())};
+
             db.delete(AppContract.Tag.TABLE_NAME, where, args);
         } catch (Exception e) {
             Log.e("TAG", e.getLocalizedMessage());

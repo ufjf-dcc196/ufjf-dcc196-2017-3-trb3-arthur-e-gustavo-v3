@@ -1,11 +1,9 @@
 package br.ufjf.dcc196.trb3.selfmanagement;
 
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -13,12 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import java.util.List;
 
 import br.ufjf.dcc196.trb3.selfmanagement.adapters.TagAdapter;
-import br.ufjf.dcc196.trb3.selfmanagement.adapters.TaskAdapter;
 import br.ufjf.dcc196.trb3.selfmanagement.helpers.TagHelper;
 import br.ufjf.dcc196.trb3.selfmanagement.models.Tag;
 
@@ -29,28 +23,30 @@ public class TagActivity extends AppCompatActivity implements TagNameDialog.TagN
     private View selectedView;
     private ListView lstTags;
     private TagAdapter tagAdapter;
-    private TagHelper dbHelper;
+    private TagHelper tagHelper;
     private Toolbar toolbar;
 
     private void updateList() {
         if (tagAdapter != null) {
-            tagAdapter.swapCursor(dbHelper.getAll());
+            tagAdapter.swapCursor(tagHelper.getAll());
         } else {
-            tagAdapter = new TagAdapter(getApplicationContext(), dbHelper.getAll(), 0);
+            tagAdapter = new TagAdapter(getBaseContext(), tagHelper.getAll(), 0);
             lstTags.setAdapter(tagAdapter);
         }
     }
 
     private void clearListSelection() {
-        selectedView.setSelected(false);
+        if (selectedTag != null) {
+            selectedView.setSelected(false);
 
-        selectedTag = null;
-        selectedView = null;
+            selectedTag = null;
+            selectedView = null;
 
-        MenuItem edit = toolbar.getMenu().findItem(R.id.action_edit);
-        MenuItem remove = toolbar.getMenu().findItem(R.id.action_remove);
-        edit.setVisible(false);
-        remove.setVisible(false);
+            MenuItem edit = toolbar.getMenu().findItem(R.id.action_edit);
+            MenuItem remove = toolbar.getMenu().findItem(R.id.action_remove);
+            edit.setVisible(false);
+            remove.setVisible(false);
+        }
     }
 
     private TagNameDialog openDialog() {
@@ -72,7 +68,7 @@ public class TagActivity extends AppCompatActivity implements TagNameDialog.TagN
 
         lstTags = (ListView) findViewById(R.id.lstTags);
         lstTags.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        dbHelper = new TagHelper(getApplicationContext());
+        tagHelper = new TagHelper(getApplicationContext());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -102,13 +98,17 @@ public class TagActivity extends AppCompatActivity implements TagNameDialog.TagN
         lstTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (selectedView != null) {
+                if (selectedTag != null) {
                     selectedView.setSelected(false);
 
                     selectedTag = (Tag) tagAdapter.getItem(position);
                     selectedView = view;
 
                     selectedView.setSelected(true);
+                } else {
+                    Intent intent = new Intent(TagActivity.this, MainActivity.class);
+                    intent.putExtra("tagId", (int) ((Tag) tagAdapter.getItem(position)).getId());
+                    startActivity(intent);
                 }
             }
         });
@@ -146,7 +146,7 @@ public class TagActivity extends AppCompatActivity implements TagNameDialog.TagN
                 dialog.setTagName(selectedTag.getName());
                 return true;
             case R.id.action_remove:
-                dbHelper.remove(selectedTag);
+                tagHelper.remove(selectedTag);
                 clearListSelection();
                 updateList();
                 return true;
@@ -159,11 +159,11 @@ public class TagActivity extends AppCompatActivity implements TagNameDialog.TagN
     public void onDialogPositiveClick(DialogFragment dialog, String name) {
         if (editing) {
             selectedTag.setName(name);
-            dbHelper.update(selectedTag);
+            tagHelper.update(selectedTag);
             clearListSelection();
         } else {
             Tag newTag = new Tag(name);
-            dbHelper.add(newTag);
+            tagHelper.add(newTag);
         }
 
         updateList();

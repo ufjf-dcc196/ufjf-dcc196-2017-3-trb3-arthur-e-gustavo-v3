@@ -21,6 +21,7 @@ public class AppContract {
         public static final String COLUMN_NAME_DESCRIPTION = "description";
         public static final String COLUMN_NAME_DIFFICULTY = "difficulty";
         public static final String COLUMN_NAME_STATE = "state";
+        public static final String COLUMN_NAME_TAGS = "taglist";
 
         public static final String SQL_CREATE_TASK = "CREATE TABLE " + TABLE_NAME + " (" +
                 _ID + INT_TYPE + " PRIMARY KEY AUTOINCREMENT" + SEP +
@@ -41,12 +42,17 @@ public class AppContract {
                 " WHERE " + _ID + " = ?";
 
         public static final String SQL_SELECT_TASKS = "SELECT " +
-                _ID + SEP +
+                TABLE_NAME + "." + _ID + SEP +
                 COLUMN_NAME_TITLE + SEP +
                 COLUMN_NAME_DESCRIPTION + SEP +
-                COLUMN_NAME_DIFFICULTY +
-                COLUMN_NAME_STATE +
-                " FROM " + TABLE_NAME;
+                COLUMN_NAME_DIFFICULTY + SEP +
+                COLUMN_NAME_STATE + SEP +
+                " group_concat(" + Tag.COLUMN_NAME_NAME + ", \", \") "
+                    + "AS " + COLUMN_NAME_TAGS +
+                " FROM " + TABLE_NAME +
+                " LEFT JOIN " + TaskTag.TABLE_NAME + " ON " + TaskTag.COLUMN_NAME_TASK + "=" + TABLE_NAME + "." + _ID +
+                " LEFT JOIN " + Tag.TABLE_NAME + " ON " + Tag.TABLE_NAME + "." + Tag._ID + "=" + TaskTag.COLUMN_NAME_TAG +
+                " GROUP BY " + TABLE_NAME + "." + _ID;
 
         public static final String SQL_DELETE_TASK = "DELETE FROM "
                 + TABLE_NAME + " WHERE " + _ID + " = ?";
@@ -93,16 +99,29 @@ public class AppContract {
         public static final String SQL_SELECT_TAGS = Tag.SQL_SELECT_TAGS +
                 " JOIN " + TABLE_NAME + " ON " + Tag._ID + " = " + COLUMN_NAME_TAG;
 
-        public static final String SQL_SELECT_TASKS_BY_TAG = SQL_SELECT_TASKS +
-                " WHERE " + COLUMN_NAME_TAG + " = ? ";
+        public static final String SQL_SELECT_TAGS_BY_TASK = "SELECT " +
+                Tag.TABLE_NAME + "." + Tag._ID + SEP +
+                Tag.COLUMN_NAME_NAME + SEP +
+                TABLE_NAME + "." + COLUMN_NAME_TASK +
+                " FROM " + Tag.TABLE_NAME +
+                " LEFT JOIN " + TABLE_NAME + " ON " + Tag.TABLE_NAME + "." + Tag._ID + "=" + COLUMN_NAME_TAG +
+                " AND " + TABLE_NAME + "." + COLUMN_NAME_TASK + " =  ?";
 
-        public static final String SQL_SELECT_TAGS_BY_TASK = SQL_SELECT_TAGS +
-                " WHERE " + COLUMN_NAME_TASK + " = ? ";
+        public static final String SQL_SELECT_TASKS_BY_TAG = "SELECT " +
+                Task.TABLE_NAME + "." + Task._ID + SEP +
+                Task.COLUMN_NAME_TITLE + SEP +
+                Task.COLUMN_NAME_DESCRIPTION + SEP +
+                Task.COLUMN_NAME_DIFFICULTY + SEP +
+                Task.COLUMN_NAME_STATE + SEP +
+                " group_concat(" + Tag.COLUMN_NAME_NAME + ", \", \") "
+                + "AS " + Task.COLUMN_NAME_TAGS +
+                " FROM " + Task.TABLE_NAME +
+                " JOIN " + TABLE_NAME + " ON " + TABLE_NAME + "." + COLUMN_NAME_TASK + "=" + Task.TABLE_NAME + "." + Task._ID +
+                " JOIN " + Tag.TABLE_NAME + " ON " + Tag.TABLE_NAME + "." + Tag._ID + "=" + TABLE_NAME + "." + COLUMN_NAME_TAG +
+                " WHERE EXISTS (SELECT 1 FROM " + TABLE_NAME +
+                    " WHERE " + TABLE_NAME + "." + COLUMN_NAME_TAG + "= ?" +
+                        " AND " + TABLE_NAME + "." + COLUMN_NAME_TASK + "=" + Task.TABLE_NAME + "." + Task._ID + ")" +
+                " GROUP BY " + Task.TABLE_NAME + "." + _ID;
 
-        public static final String SQL_DELETE_BY_TASK = "DELETE FROM " + TABLE_NAME +
-                " WHERE " + COLUMN_NAME_TASK + " = ? ";
-
-        public static final String SQL_DELETE_BY_TAG = "DELETE FROM " + TABLE_NAME +
-                " WHERE " + COLUMN_NAME_TAG + " = ? ";
     }
 }
