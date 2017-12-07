@@ -124,5 +124,6 @@ public class AppContract {
                         " AND " + TABLE_NAME + "." + COLUMN_NAME_TASK + "=" + Task.TABLE_NAME + "." + Task._ID + ")" +
                 " GROUP BY " + Task.TABLE_NAME + "." + _ID;
 
+        public static final String SQL_DELETE_WHERE = COLUMN_NAME_TASK + " = ? AND " + COLUMN_NAME_TAG + " = ?";
     }
 }
