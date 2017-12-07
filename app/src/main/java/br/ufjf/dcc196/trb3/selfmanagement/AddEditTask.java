@@ -91,8 +91,7 @@ public class AddEditTask extends AppCompatActivity {
         btnTaskCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddEditTask.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
