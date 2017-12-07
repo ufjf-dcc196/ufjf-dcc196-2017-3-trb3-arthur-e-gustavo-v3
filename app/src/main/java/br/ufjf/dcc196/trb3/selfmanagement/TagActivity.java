@@ -107,6 +107,7 @@ public class TagActivity extends AppCompatActivity implements TagNameDialog.TagN
                     selectedView.setSelected(true);
                 } else {
                     Intent intent = new Intent(TagActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("tagId", (int) ((Tag) tagAdapter.getItem(position)).getId());
                     startActivity(intent);
                 }
@@ -138,6 +139,7 @@ public class TagActivity extends AppCompatActivity implements TagNameDialog.TagN
         switch (id) {
             case R.id.action_tags:
                 Intent intent = new Intent(TagActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 return true;
             case R.id.action_edit:
