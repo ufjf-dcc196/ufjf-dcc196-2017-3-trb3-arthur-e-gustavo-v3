@@ -1,13 +1,12 @@
 package br.ufjf.dcc196.trb3.selfmanagement;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -19,8 +18,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import br.ufjf.dcc196.trb3.selfmanagement.adapters.CheckTagAdapter;
-import br.ufjf.dcc196.trb3.selfmanagement.adapters.TagAdapter;
-import br.ufjf.dcc196.trb3.selfmanagement.helpers.TagHelper;
 import br.ufjf.dcc196.trb3.selfmanagement.helpers.TaskHelper;
 import br.ufjf.dcc196.trb3.selfmanagement.helpers.TaskTagHelper;
 import br.ufjf.dcc196.trb3.selfmanagement.models.Tag;
@@ -120,9 +117,13 @@ public class AddEditTask extends AppCompatActivity {
                         taskTagHelper.removeAllTags(task);
                     }
 
-                    for (Integer position: checked) {
-                        Tag tag = (Tag) tagAdapter.getItem(position);
-                        taskTagHelper.add(task, tag);
+                    for (int i = 0; i < tagAdapter.getCount(); i++) {
+                        Tag tag = (Tag) tagAdapter.getItem(i);
+                        if (tagAdapter.isSelected(i)) {
+                            taskTagHelper.add(task, tag);
+                        } else {
+                            taskTagHelper.remove(task, tag);
+                        }
                     }
 
                     finish();
