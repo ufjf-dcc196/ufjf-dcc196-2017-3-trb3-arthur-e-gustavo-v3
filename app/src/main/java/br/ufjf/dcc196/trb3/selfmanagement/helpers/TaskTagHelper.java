@@ -89,4 +89,16 @@ public class TaskTagHelper extends DatabaseHelper {
             Log.e("TAGTASK", e.getStackTrace().toString());
         }
     }
+
+    public void remove(Task task, Tag tag) {
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+
+            db.delete(AppContract.TaskTag.TABLE_NAME, AppContract.TaskTag.SQL_DELETE_WHERE, new String[]{String.valueOf(task.getId()), String.valueOf(tag.getId())});
+
+        } catch (Exception e) {
+            Log.e("TAGTASK", e.getLocalizedMessage());
+            Log.e("TAGTASK", e.getStackTrace().toString());
+        }
+    }
 }

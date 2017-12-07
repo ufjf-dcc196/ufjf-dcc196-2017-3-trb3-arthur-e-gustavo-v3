@@ -52,7 +52,8 @@ public class AppContract {
                 " FROM " + TABLE_NAME +
                 " LEFT JOIN " + TaskTag.TABLE_NAME + " ON " + TaskTag.COLUMN_NAME_TASK + "=" + TABLE_NAME + "." + _ID +
                 " LEFT JOIN " + Tag.TABLE_NAME + " ON " + Tag.TABLE_NAME + "." + Tag._ID + "=" + TaskTag.COLUMN_NAME_TAG +
-                " GROUP BY " + TABLE_NAME + "." + _ID;
+                " GROUP BY " + TABLE_NAME + "." + _ID +
+                " ORDER BY " + COLUMN_NAME_TITLE;
 
         public static final String SQL_DELETE_TASK = "DELETE FROM "
                 + TABLE_NAME + " WHERE " + _ID + " = ?";
@@ -123,5 +124,6 @@ public class AppContract {
                         " AND " + TABLE_NAME + "." + COLUMN_NAME_TASK + "=" + Task.TABLE_NAME + "." + Task._ID + ")" +
                 " GROUP BY " + Task.TABLE_NAME + "." + _ID;
 
+        public static final String SQL_DELETE_WHERE = COLUMN_NAME_TASK + " = ? AND " + COLUMN_NAME_TAG + " = ?";
     }
 }
